@@ -2,26 +2,106 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
-  color: var(--foreground);
-  background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+}
+
+@layer base {
+  :root {
+    /* Light Mode (Not emphasized as Arbit is mainly dark-themed) */
+    --background: 0 0% 100%; /* Default white background */
+    --foreground: 224 71.4% 4.1%; /* Rich dark for main text */
+    --card: 0 0% 100%; /* White for card backgrounds */
+    --card-foreground: 224 71.4% 4.1%; /* Dark text on cards */
+    --popover: 0 0% 100%; /* White popovers */
+    --popover-foreground: 224 71.4% 4.1%; /* Dark text on popovers */
+    
+    /* Primary Colors */
+    --primary: 220.9 39.3% 11%; /* Dark blue for core elements */
+    --primary-foreground: 210 20% 98%; /* Light text on primary */
+    --secondary: 220 14.3% 95.9%; /* Soft light gray for secondary elements */
+    --secondary-foreground: 220.9 39.3% 11%; /* Dark gray for secondary text */
+
+    /* Muted Colors */
+    --muted: 220 14.3% 95.9%; /* Light gray for muted items */
+    --muted-foreground: 220 8.9% 46.1%; /* Medium gray text on muted items */
+
+    /* Accent and Destructive */
+    --accent: 220 14.3% 95.9%; /* Accent light gray */
+    --accent-foreground: 220.9 39.3% 11%; /* Accent foreground dark */
+    --destructive: 0 84.2% 60.2%; /* Soft red for destructive actions */
+    --destructive-foreground: 210 20% 98%; /* Light text on destructive */
+
+    /* Border and Input */
+    --border: 220 13% 91%; /* Light border */
+    --input: 220 13% 91%; /* Light input background */
+
+    /* Rings and Charts */
+    --ring: 224 71.4% 4.1%; /* Rich dark ring color */
+    --chart-1: 12 76% 61%; /* Vibrant orange */
+    --chart-2: 173 58% 39%; /* Bright green */
+    --chart-3: 197 37% 24%; /* Darker blue */
+    --chart-4: 43 74% 66%; /* Bright yellow */
+    --chart-5: 27 87% 67%; /* Vivid red */
+    
+    --radius: 0.5rem; /* Border radius */
+  }
+
+  .dark {
+    /* Dark Mode Colors */
+    --background: 220 15% 10%; /* Deep space black for background */
+    --foreground: 210 20% 98%; /* Soft white for primary text */
+
+    /* Card and Popover Colors */
+    --card: 220 15% 10%; /* Dark gray for card background */
+    --card-foreground: 210 20% 98%; /* Soft white on cards */
+    --popover: 220 15% 10%; /* Matching dark popover background */
+    --popover-foreground: 210 20% 98%; /* Soft white for popover text */
+
+    /* Primary Elements */
+    --primary: 210 30% 10%; /* Near black for primary background elements */
+    --primary-foreground: 210 20% 98%; /* Soft white text on primary */
+
+    /* Secondary Elements */
+    --secondary: 215 27.9% 16.9%; /* Medium gray for secondary elements */
+    --secondary-foreground: 210 20% 98%; /* Soft white on secondary */
+
+    /* Muted and Accent Colors */
+    --muted: 215 27.9% 16.9%; /* Dark muted gray */
+    --muted-foreground: 217.9 10.6% 64.9%; /* Light gray for muted text */
+    --accent: 180 100% 50%; /* Neon cyan for accent */
+    --accent-foreground: 210 20% 98%; /* Soft white on accent */
+
+    /* Destructive Colors */
+    --destructive: 0 62.8% 30.6%; /* Muted red for destructive actions */
+    --destructive-foreground: 210 20% 98%; /* White on destructive */
+
+    /* Border and Input Colors */
+    --border: 215 27.9% 16.9%; /* Dark border */
+    --input: 215 27.9% 16.9%; /* Dark input field background */
+
+    /* Ring and Chart Colors */
+    --ring: 180 100% 50%; /* Neon cyan for rings */
+    --chart-1: 220 90% 56%; /* Electric purple */
+    --chart-2: 160 60% 45%; /* Dark teal for diversity */
+    --chart-3: 30 80% 55%; /* Vibrant yellow-orange */
+    --chart-4: 280 65% 60%; /* Bright purple */
+    --chart-5: 340 75% 55%; /* Bright magenta */
+  }
+}
+
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
   }
 }

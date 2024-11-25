@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import Navbar from "@/components/global/Navbar";
+import Footer from "@/components/global/Footer";
+import { DeviceProvider } from "@/context/DeviceContext";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -24,11 +27,38 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable}  antialiased`}
       >
-        {children}
+        <DeviceProvider>
+          <main className="h-screen overflow-hidden">
+            {/* Animated background */}
+            <div className="absolute inset-0 z-0  overflow-hidden">
+              <div className="absolute inset-0 bg-[#000000] opacity-50"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-[#00E5FF] to-[#9D00FF]  opacity-10"></div>
+              <div className="absolute inset-0">
+                {[...Array(50)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="absolute rounded-full bg-[#00E5FF] animate-float"
+                    style={{
+                      width: `${Math.random() * 4 + 1}px`,
+                      height: `${Math.random() * 4 + 1}px`,
+                      top: `${Math.random() * 100}%`,
+                      left: `${Math.random() * 100}%`,
+                      animationDuration: `${Math.random() * 10 + 5}s`,
+                      animationDelay: `${Math.random() * 5}s`,
+                    }}
+                  ></div>
+                ))}
+              </div>
+            </div>
+            <Navbar />
+            {children}
+            <Footer />
+          </main>
+        </DeviceProvider>
       </body>
     </html>
   );
