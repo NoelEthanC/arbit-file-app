@@ -7,7 +7,7 @@ import Radar from "@/components/blocks/RadarUI";
 import AsideUI from "@/components/blocks/AsideUI";
 import FileUpload from "@/components/blocks/FileUpload";
 import FileUploadSheet from "@/components/blocks/FileUploadSheet";
-import { useDeviceContext } from "@/context/DeviceContext";
+import { UseDeviceContext } from "@/context/DeviceContext";
 
 export default function ArbitApp() {
   const { toast } = useToast();
@@ -21,9 +21,8 @@ export default function ArbitApp() {
     setSelectedDevice,
     setDetectedDevices,
     isConnected,
-  } = useDeviceContext();
+  } = UseDeviceContext();
 
-  console.log("detectedDevices", detectedDevices);
   const handleDeviceClick = (device: DetectedDevice) => {
     setIsOpen(!isOpen);
     setSelectedDevice(device);

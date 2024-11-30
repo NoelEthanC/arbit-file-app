@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -15,14 +16,20 @@ const AsideUI = ({
         Open Arbit on another device to start sharing files.
       </p>
       <div className="py-0.5 lg:py-1 px-3 lg:px-6 space-x-1 lg:space-x-2  mx-auto rounded-full  w-fit border border-yellow-400 flex items-center justify-center">
-        <p className="">You are known as {currentDevice?.deviceName}</p>
+        <p className="">
+          You are known as{" "}
+          <span className="capitalize font-semibold text-yellow-400">
+            {currentDevice?.data?.assignedUsername}
+          </span>
+        </p>
+
         <Avatar>
-          <AvatarImage src={currentDevice?.avatar} alt={currentDevice?.name} />
-          <AvatarFallback>
-            {/* {currentDevice?.username
-              .split(" ")
+          <AvatarImage src={undefined} alt={currentDevice?.data?.deviceName} />
+          <AvatarFallback className="bg-yellow-600 uppercase">
+            {currentDevice?.data?.assignedUsername
+              ?.split(" ")
               .map((n) => n[0])
-              .join("")} */}
+              .join("")}
           </AvatarFallback>
         </Avatar>
       </div>

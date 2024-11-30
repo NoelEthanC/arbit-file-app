@@ -15,7 +15,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import FileUpload from "./FileUpload";
-import { useDeviceContext } from "@/context/DeviceContext";
+// import { useDeviceContext } from "@/context/DeviceContext";
 
 const FileUploadSheet = ({
   isOpen,
@@ -28,7 +28,7 @@ const FileUploadSheet = ({
   selectedDevice?: DetectedDevice | null;
   onOpen: (isOpen: boolean) => void;
   isNavLink?: boolean;
-  currentUser?: CurrentUser | null;
+  currentDevice?: CurrentDevice | undefined | null;
 }) => {
   // const { selectedDevice, currentUser } = useDeviceContext();
   // console.log("selectedDevice", selectedDevice);

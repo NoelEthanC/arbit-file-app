@@ -1,4 +1,4 @@
-import { Radar, Smartphone, Upload } from "lucide-react";
+import { Laptop, Radar, Smartphone, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const RadarUI = ({
@@ -41,24 +41,31 @@ const RadarUI = ({
           <div
             key={device.id}
             style={{
-              left: `calc(${device.coords.x}% - 1.5rem)`,
-              top: `calc(${device.coords.y}% - 1.5rem)`,
+              left: `calc(${device.coords?.x}% - 1.5rem)`,
+              top: `calc(${device.coords?.y}% - 1.5rem)`,
             }}
             className="flex flex-col items-center absolute"
           >
             <Button
-              className=" rounded-full w-16 h-16 shadow-xl bg-stone-900/80 hover:bg-lime/90 backdrop-blur-sm transition-colors duration-300"
+              className=" rounded-full w-12 h-12 md:w-16 md:h-16 shadow-xl bg-stone-900/80 hover:bg-lime/90 backdrop-blur-sm transition-colors duration-300"
               onClick={() => onDeviceClick(device)}
             >
-              <Smartphone
-                className="w-full h-full  text-yellow-500  "
-                size={50}
-              />
+              {device.data.type === "mobile" ? (
+                <Smartphone
+                  className="w-full h-full  text-yellow-500  "
+                  size={50}
+                />
+              ) : (
+                <Laptop
+                  className="w-full h-full  text-yellow-500  "
+                  size={50}
+                />
+              )}
             </Button>
-            <p className="bg-gradient-to-r capitalize  text-white  text-sm font-semibold">
+            <p className="bg-gradient-to-r capitalize  text-white text-xs md:text-sm font-semibold">
               {device.data.assignedUsername}
             </p>
-            <p className="bg-gradient-to-r  text-yellow-200  text-xs font-semibold">
+            <p className="bg-gradient-to-r  text-yellow-200 text-[10px] md:text-xs  font-semibold">
               {device.data.os} {device.data.browser}
             </p>
           </div>

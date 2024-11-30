@@ -1,5 +1,5 @@
 type Device = {
-  id?: string;
+  id?: string | number;
   deviceName?: string;
   assignedUsername?: string;
   type?: string;
@@ -15,7 +15,7 @@ type Coordinates = {
 };
 
 type CurrentDevice = {
-  id?: string;
+  id?: string | number;
   data: Device;
 };
 
