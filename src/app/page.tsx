@@ -45,12 +45,7 @@ export default function ArbitApp() {
         {isHome ? (
           <div className="w-full h-full">
             <div className=" lg:flex lg:items-center text-center w-full space-y-8 lg:space-y-0 h-full">
-              <FileUploadSheet
-                isOpen={isOpen}
-                onOpen={setIsOpen}
-                selectedDevice={selectedDevice}
-                currentDevice={currentDevice}
-              />
+              <FileUploadSheet isOpen={isOpen} onOpen={setIsOpen} />
               <AsideUI currentDevice={currentDevice} />
               <Radar
                 detectedDevices={detectedDevices}

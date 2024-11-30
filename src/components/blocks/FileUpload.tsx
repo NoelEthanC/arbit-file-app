@@ -11,9 +11,9 @@ const FileUpload = ({
   toast,
 }: {
   // handleFileUpload: (evt: React.ChangeEvent<HTMLInputElement>) => void;
-  setIsHome: (isHome: boolean) => void;
+  setIsHome?: (isHome: boolean) => void;
   selectedDevice: DetectedDevice | null;
-  toast: any;
+  toast?: any;
 }) => {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);

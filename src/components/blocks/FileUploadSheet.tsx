@@ -15,23 +15,22 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import FileUpload from "./FileUpload";
+import { UseDeviceContext } from "@/context/DeviceContext";
+import AvatarUI from "./AvatarUI";
 // import { useDeviceContext } from "@/context/DeviceContext";
 
 const FileUploadSheet = ({
   isOpen,
   onOpen,
-  // selectedDevice,
   isNavLink = false,
-}: // currentUser,
-{
+}: {
   isOpen?: boolean;
-  selectedDevice?: DetectedDevice | null;
   onOpen: (isOpen: boolean) => void;
   isNavLink?: boolean;
-  currentDevice?: CurrentDevice | undefined | null;
 }) => {
-  // const { selectedDevice, currentUser } = useDeviceContext();
-  // console.log("selectedDevice", selectedDevice);
+  const { currentDevice, selectedDevice, setSelectedDevice } =
+    UseDeviceContext();
+
   return (
     <Sheet onOpenChange={() => onOpen(!isOpen)} open={isOpen}>
       {isNavLink && (
@@ -41,33 +40,41 @@ const FileUploadSheet = ({
           </Button>
         </SheetTrigger>
       )}
-      {/* <SheetContent
+      <SheetContent
         side={"left"}
         className="bg-white/20 backdrop-blur-sm sm:max-w-xl rounded-r-xl h-full my-auto space-y-2"
       >
         <SheetHeader className=" flex-row items-baseline justify-between">
-          <SheetTitle className="">
+          <SheetTitle className="basis-2/3">
             File Transfer Panel
             <p className="text-sm text-muted-foreground font-normal">
-              Established Connection with{" "}
-              <span className="font-semibold text-yellow-400 ">
-                {selectedDevice?.name}
-              </span>
+              {selectedDevice ? (
+                <>
+                  Established Connection with{" "}
+                  <span className="font-semibold text-[#00E5FF]  capitalize">
+                    {selectedDevice?.data.assignedUsername}
+                  </span>
+                  <Button
+                    variant="ghost"
+                    onClick={() => setSelectedDevice(null)}
+                    className="px-0 hover:bg-transparent hover:text-[#00E5FF] underline"
+                  >
+                    Close Connection
+                  </Button>
+                </>
+              ) : (
+                "No device selected yet from radar"
+              )}
             </p>
           </SheetTitle>
-          <SheetDescription className="flex items-center gap-x-4">
-            <span className="text-sm text-[#E5E5E5]">
-              Known as {currentUser?.deviceName}
+          <SheetDescription className="flex flex-col  items-center ">
+            <AvatarUI />
+            <span className="text-sm text-[#E5E5E5] w-full text-center">
+              {/* You are{" "} */}
+              <span className="font-semibold text-yellow-400 capitalize">
+                {currentDevice?.data.assignedUsername}
+              </span>
             </span>
-            <Avatar>
-              <AvatarImage src={currentUser?.avatar} alt={currentUser?.name} />
-              <AvatarFallback>
-                {currentUser?.name
-                  .split(" ")
-                  .map((n) => n[0])
-                  .join("")}
-              </AvatarFallback>
-            </Avatar>
           </SheetDescription>
         </SheetHeader>
         <div className="">
@@ -82,7 +89,7 @@ const FileUploadSheet = ({
         <SheetFooter>
           <SheetClose asChild></SheetClose>
         </SheetFooter>
-      </SheetContent> */}
+      </SheetContent>
     </Sheet>
   );
 };
