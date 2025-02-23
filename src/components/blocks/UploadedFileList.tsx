@@ -103,7 +103,6 @@ const FileItem = ({ file }: { file: File }) => {
   };
 
   useEffect(() => {
-    console.log(file);
     setFileObjectURL(URL.createObjectURL(file));
     return () => {
       URL.revokeObjectURL(fileObjectURL);

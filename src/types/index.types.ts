@@ -24,3 +24,9 @@ type DetectedDevice = {
   data: Device;
   coords: Coordinates;
 };
+
+type DataRoom = {
+  sender: DetectedDevice;
+  receiver: DetectedDevice;
+  isRequest: boolean;
+};

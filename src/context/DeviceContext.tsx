@@ -129,6 +129,10 @@ interface iDeviceContext {
   detectedDevices: DetectedDevice[];
   setDetectedDevices: (devices: DetectedDevice[]) => void;
   isConnected: boolean;
+  onDeviceClick: (device: DetectedDevice) => void;
+  dataRoom: DataRoom | null;
+  setDataRoom: (dataRoom: DataRoom | null) => void;
+  notification: any;
 }
 
 const DeviceContext = createContext<iDeviceContext | null>(null);
@@ -140,11 +144,27 @@ const DeviceProvider = ({ children }: { children: React.ReactNode }) => {
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [detectedDevices, setDetectedDevices] = useState<DetectedDevice[]>([]);
   const [socketId, setSocketId] = useState<string | undefined>(undefined);
+  const [dataRoom, setDataRoom] = useState<DataRoom | null>(null);
+  const [notification, setNotification] = useState<any>();
+  // const [inComingRequest, setInComingRequest] = useState<boolean>(false);
+
+  const onDeviceClick = (device: DetectedDevice) => {
+    // create room with 2 devices with intent to creat a data channel
+    setDataRoom({
+      sender: currentDevice as DetectedDevice,
+      receiver: device,
+      isRequest: true,
+    });
+    socket.emit("handshake-signal", {
+      sender: currentDevice,
+      receiver: device,
+      isRequest: true,
+    });
+    // emmit the event  to the server
+    // server will emmit evt to the client
+  };
 
   useEffect(() => {
-    // const timer = setTimeout(() => {
-    //   setDetectedDevices(onlineDevices);
-    // }, 500);
     const onConnect = () => {
       console.log("connected to socket");
       // get device data through UA parser
@@ -181,39 +201,25 @@ const DeviceProvider = ({ children }: { children: React.ReactNode }) => {
       }
     };
 
-    // const onNewDevice = (newDevice: DetectedDevice) => {
-    //   console.log("newDevice", newDevice);
-    //   // Generate coordinates for the new device
-    //   const generateCoordinates = (device: DetectedDevice) => {
-    //     // Find a free coordinate
-    //     const availableCoords = predefinedCoordinates.filter(
-    //       (coord) =>
-    //         !Object.values(assignedCoordinates).some(
-    //           (assignedCoord) =>
-    //             assignedCoord.x === coord.x && assignedCoord.y === coord.y
-    //         )
-    //     );
+    const onHandshakeSignal = (data: DataRoom) => {
+      if (data.receiver.id === socket.id) {
+        const senderId = data.sender.id;
+        setTimeout(() => {
+          socket.emit("short-message", {
+            message: "Request not accepted try again",
+            senderId: senderId,
+          });
+          setDataRoom(null);
+        }, 15000);
+        setDataRoom(data);
+        return;
+      }
+    };
 
-    //     // Check if there are available coordinates
-    //     if (availableCoords.length === 0) {
-    //       console.warn(`No available coordinates for device ${device.id}`);
-    //       return { id: device.id, data: { ...device }, coords: null }; // or handle as needed
-    //     }
+    const onShortMessage = (data: { message: string; senderId: string }) => {
+      setNotification(data);
+    };
 
-    //     const { x, y } =
-    //       availableCoords[Math.floor(Math.random() * availableCoords.length)];
-
-    //     // Assign the coordinate to the device
-    //     assignedCoordinates[device.id] = { x, y };
-
-    //     return { id: device.id, data: { ...device }, coords: { x, y } };
-    //   };
-
-    //   const updatedDevice = generateCoordinates(newDevice);
-    //   setDetectedDevices(
-    //     (prevDevices) => [...prevDevices, updatedDevice] as DetectedDevice[]
-    //   );
-    // };
     const onDetectedDevices = (detectedDevices: DetectedDevice[]) => {
       const generateCoordinates = (devices: DetectedDevice[]) => {
         return devices
@@ -259,56 +265,21 @@ const DeviceProvider = ({ children }: { children: React.ReactNode }) => {
       setDetectedDevices(updatedDetectedDevices as DetectedDevice[]);
       // setDetectedDevices(mergedDevices as DetectedDevice[]);
     };
-    // const onDetectedDevices = (detectedDevices: DetectedDevice[]) => {
-    //   const generateCoordinates = (devices: DetectedDevice[]) => {
-    //     return devices
-    //       .filter((device) => device.id !== socket.id)
-    //       .map((device) => {
-    //         // Find a free coordinate
-    //         const availableCoords = predefinedCoordinates.filter(
-    //           (coord) =>
-    //             !Object.values(assignedCoordinates).some(
-    //               (assignedCoord) =>
-    //                 assignedCoord.x === coord.x && assignedCoord.y === coord.y
-    //             )
-    //         );
 
-    //         // Check if there are available coordinates
-    //         if (availableCoords.length === 0) {
-    //           console.warn(`No available coordinates for device ${device.id}`);
-    //           return { id: device.id, data: { ...device }, coords: null }; // or handle as needed
-    //         }
-
-    //         const { x, y } =
-    //           availableCoords[
-    //             Math.floor(Math.random() * availableCoords.length)
-    //           ];
-
-    //         // Assign the coordinate to the device
-    //         assignedCoordinates[device.id] = { x, y };
-
-    //         return { id: device.id, data: { ...device }, coords: { x, y } };
-    //       });
-    //   };
-
-    //   const updatedDetectedDevices = generateCoordinates(detectedDevices);
-    //   // TODO: check if the device is already in the detectedDevices array and update the coords if it is
-    //   setDetectedDevices(updatedDetectedDevices as DetectedDevice[]);
-    // };
-
+    socket.on("short-message", onShortMessage);
+    socket.on("handshake-signal", onHandshakeSignal);
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
     socket.on("detected-devices", onDetectedDevices);
-    // socket.on("new-device", onNewDevice);
     if (socket.connected) {
       onConnect();
     }
     return () => {
+      socket.off("short-message", onShortMessage);
+      socket.off("handshake-signal", onHandshakeSignal);
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
       socket.off("detected-devices", onDetectedDevices);
-      // clearTimeout(timer);
-      // socket.off("new-device", onNewDevice);
     };
   }, []);
 
@@ -317,10 +288,14 @@ const DeviceProvider = ({ children }: { children: React.ReactNode }) => {
       value={{
         currentDevice,
         selectedDevice,
-        setSelectedDevice,
         detectedDevices,
-        setDetectedDevices,
         isConnected,
+        dataRoom,
+        setDataRoom,
+        setSelectedDevice,
+        setDetectedDevices,
+        notification,
+        onDeviceClick,
       }}
     >
       {children}
@@ -328,7 +303,7 @@ const DeviceProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-const UseDeviceContext = () => {
+const useDeviceContext = () => {
   const context = useContext(DeviceContext);
   if (context === null) {
     throw new Error("useDeviceContext must be used within a DeviceProvider");
@@ -336,4 +311,4 @@ const UseDeviceContext = () => {
   return context;
 };
 
-export { DeviceContext, DeviceProvider, UseDeviceContext };
+export { DeviceContext, DeviceProvider, useDeviceContext };

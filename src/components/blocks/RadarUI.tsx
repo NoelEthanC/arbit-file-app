@@ -1,8 +1,9 @@
-import { Laptop, Radar, Smartphone, Upload } from "lucide-react";
+import { Computer, Laptop, Radar, Smartphone, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const RadarUI = ({
   detectedDevices,
+
   onDeviceClick,
 }: {
   detectedDevices: DetectedDevice[];
@@ -56,9 +57,9 @@ const RadarUI = ({
                   size={50}
                 />
               ) : (
-                <Laptop
+                <Computer
                   className="w-full h-full  text-yellow-500  "
-                  size={50}
+                  size={60}
                 />
               )}
             </Button>

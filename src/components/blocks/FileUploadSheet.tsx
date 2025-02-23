@@ -15,7 +15,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import FileUpload from "./FileUpload";
-import { UseDeviceContext } from "@/context/DeviceContext";
+import { useDeviceContext } from "@/context/DeviceContext";
 import AvatarUI from "./AvatarUI";
 // import { useDeviceContext } from "@/context/DeviceContext";
 
@@ -29,7 +29,7 @@ const FileUploadSheet = ({
   isNavLink?: boolean;
 }) => {
   const { currentDevice, selectedDevice, setSelectedDevice } =
-    UseDeviceContext();
+    useDeviceContext();
 
   return (
     <Sheet onOpenChange={() => onOpen(!isOpen)} open={isOpen}>

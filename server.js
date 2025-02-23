@@ -8,17 +8,6 @@ import {
   colors,
   animals,
 } from "unique-names-generator"; // Import the library
-// Define a custom set of fruit names
-const fruits = [
-  "apple",
-  "banana",
-  "cherry",
-  "eate",
-  "elderberry",
-  "fig",
-  "grape",
-  "honeydew",
-];
 
 const dev = process.env.NODE_ENV !== "production";
 const hostname = "localhost";
@@ -36,25 +25,26 @@ app.prepare().then(() => {
 
   io.on("connection", (socket) => {
     io.emit("connected", "Client connected");
-    console.log("Server says: Client connected");
-    // ...
 
     socket.on("connected-devices", (newDevice) => {
-      console.log("SERVER newDevice", newDevice);
-      // const assignedUsername = uniqueNamesGenerator({
-      //   dictionaries: [colors, fruits], // Use the custom fruit names
-      //   length: 2, // Generate a single name
-      //   separator: " ",
-      // });
-      // newDevice.assignedUsername = assignedUsername;
+      console.log("SERVER NEW DEVICE::", newDevice);
+
       newDevice.avatar = `https://i.pravatar.cc/300?img=${Math.floor(
         Math.random() * 100
       )}`;
       connectedDevices = [...connectedDevices, newDevice];
       io.emit("detected-devices", connectedDevices);
-      // io.emit("new-device", newDevice);
     });
 
+    socket.on("short-message", (data) => {
+      console.log(data);
+
+      socket.to(data.senderId).emit("short-message", data);
+    });
+
+    socket.on("handshake-signal", (data) => {
+      io.to(data.receiver.id).emit("handshake-signal", data);
+    });
     socket.on("disconnect", () => {
       connectedDevices = connectedDevices.filter(
         (device) => device.id !== socket.id

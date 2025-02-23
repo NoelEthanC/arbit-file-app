@@ -1,9 +1,9 @@
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { UseDeviceContext } from "@/context/DeviceContext";
+import { useDeviceContext } from "@/context/DeviceContext";
 
 const AvatarUI = () => {
-  const { currentDevice } = UseDeviceContext();
+  const { currentDevice } = useDeviceContext();
   return (
     <Avatar className="  ">
       <AvatarImage src={undefined} alt={currentDevice?.data.deviceName} />
